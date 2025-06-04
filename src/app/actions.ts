@@ -1,10 +1,18 @@
 "use server";
 
 import Exa from "exa-js";
+import { searchResultsSchema, type SearchResult } from "@/lib/schemas";
 import { FormState } from "@/types/form";
-import { searchResultsSchema } from "@/lib/schemas";
 
 const exa = new Exa(process.env.EXA_API_KEY);
+
+function sortResultsByScore(results: SearchResult[]): SearchResult[] {
+  return results.slice().sort((a, b) => {
+    const scoreA = a.score ?? 0;
+    const scoreB = b.score ?? 0;
+    return scoreB - scoreA;
+  });
+}
 
 export async function search(
   prevState: FormState,
@@ -39,7 +47,9 @@ export async function search(
       };
     }
 
-    return { results: validationResult.data, error: null };
+    const sortedResults = sortResultsByScore(validationResult.data);
+
+    return { results: sortedResults, error: null };
   } catch (error) {
     console.error(error);
 

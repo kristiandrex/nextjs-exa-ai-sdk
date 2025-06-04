@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { SearchResult } from "@/lib/schemas";
+import { isWorthExpanding } from "@/lib/classifiers";
 import { ExternalLink } from "lucide-react";
 
 type SearchResultCardProps = Readonly<{
@@ -7,10 +9,19 @@ type SearchResultCardProps = Readonly<{
 }>;
 
 export function SearchResultCard({ result }: SearchResultCardProps) {
+  const worthExpanding = isWorthExpanding(result);
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
-        <h3 className="text-lg font-semibold">{result.title}</h3>
+        <div className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold">{result.title}</h3>
+          <Badge variant={worthExpanding ? "default" : "destructive"}>
+            {worthExpanding
+              ? "Vale la pena expandir"
+              : "No vale la pena expandir"}
+          </Badge>
+        </div>
         <a
           href={result.url}
           target="_blank"

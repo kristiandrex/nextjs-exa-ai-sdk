@@ -4,12 +4,12 @@ export const searchResultSchema = z.object({
   id: z.string(),
   title: z.string(),
   url: z.string(),
-  publishedDate: z.string(),
-  author: z.string(),
+  publishedDate: z.string().optional(),
+  author: z.string().optional(),
   text: z.string(),
   summary: z.string(),
-  image: z.string(),
-  favicon: z.string(),
+  image: z.string().optional(),
+  favicon: z.string().optional(),
   score: z.number().optional(),
 });
 

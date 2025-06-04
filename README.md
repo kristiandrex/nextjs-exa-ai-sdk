@@ -13,7 +13,7 @@ Esta es una aplicación web construida con Next.js que integra el SDK de Exa AI 
 1. Clona el repositorio:
 
 ```bash
-git clone [URL_DEL_REPOSITORIO]
+git clone https://github.com/kristiandrex/nextjs-exa-ai-sdk.git
 cd nextjs-exa-ai-sdk
 ```
 

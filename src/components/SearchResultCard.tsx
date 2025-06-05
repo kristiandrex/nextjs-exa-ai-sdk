@@ -1,15 +1,26 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { SearchResult } from "@/lib/schemas";
-import { isWorthWriteMore } from "@/lib/classifiers";
 import { ExternalLink, TextCursor } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { isWorthWriteMore } from "@/lib/classifiers";
+import { SearchResult } from "@/lib/schemas";
 
 type SearchResultCardProps = Readonly<{
   result: SearchResult;
+  query: string;
 }>;
 
-export function SearchResultCard({ result }: SearchResultCardProps) {
+export function SearchResultCard({ result, query }: SearchResultCardProps) {
+  const router = useRouter();
   const worthWriteMore = isWorthWriteMore(result);
+
+  function handleGenerateArticle() {
+    localStorage.setItem("selectedResult", JSON.stringify(result));
+    localStorage.setItem("userQuery", query);
+    router.push("/generate");
+  }
 
   return (
     <Card>
@@ -23,7 +34,17 @@ export function SearchResultCard({ result }: SearchResultCardProps) {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          {worthWriteMore && <TextCursor className="h-5 w-5 text-gray-500" />}
+          {worthWriteMore && (
+            <Button
+              onClick={handleGenerateArticle}
+              variant="ghost"
+              size="icon"
+              className="text-gray-500 hover:text-gray-700"
+              title="Generar artículo"
+            >
+              <TextCursor className="h-5 w-5" />
+            </Button>
+          )}
 
           <a
             href={result.url}

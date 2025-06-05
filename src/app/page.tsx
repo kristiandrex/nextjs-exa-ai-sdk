@@ -75,7 +75,11 @@ export default function Home() {
             </h2>
             <div className="grid gap-4">
               {state.results.map((result) => (
-                <SearchResultCard key={result.id} result={result} />
+                <SearchResultCard
+                  key={result.id}
+                  result={result}
+                  query={state.query}
+                />
               ))}
             </div>
           </div>

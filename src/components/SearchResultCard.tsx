@@ -17,8 +17,13 @@ export function SearchResultCard({ result, query }: SearchResultCardProps) {
   const worthWriteMore = isWorthWriteMore(result);
 
   function handleGenerateArticle() {
-    localStorage.setItem("selectedResult", JSON.stringify(result));
-    localStorage.setItem("userQuery", query);
+    localStorage.setItem(
+      "articleGeneration",
+      JSON.stringify({
+        result,
+        query,
+      })
+    );
     router.push("/generate");
   }
 

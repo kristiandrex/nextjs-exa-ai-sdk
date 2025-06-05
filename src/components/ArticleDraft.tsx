@@ -1,25 +1,27 @@
 "use client";
 
-import { useMemo } from "react";
-import { useChatContext } from "@/contexts/ChatContext";
+import { Card, CardHeader, CardContent } from "./ui/card";
+import { UIMessage } from "ai";
 
-export function ArticleDraft() {
-  const { messages } = useChatContext();
+type Props = Readonly<{
+  lastMessage: UIMessage;
+}>;
 
-  const lastAssistantMessage = useMemo(
-    () => messages.findLast((message) => message.role === "assistant"),
-    [messages]
-  );
-
-  if (!lastAssistantMessage) return null;
-
+export function ArticleDraft({ lastMessage }: Props) {
   return (
-    <div className="h-[calc(100vh-16rem)] overflow-y-auto">
-      <div className="prose prose-xl max-w-none">
-        <div className="whitespace-pre-wrap text-lg leading-relaxed">
-          {lastAssistantMessage.content}
+    <Card>
+      <CardHeader>
+        <h2 className="text-2xl font-bold">Borrador</h2>
+      </CardHeader>
+      <CardContent>
+        <div className="h-[calc(100vh-16rem)] overflow-y-auto">
+          <div className="prose prose-xl max-w-none">
+            <div className="whitespace-pre-wrap text-lg leading-relaxed">
+              {lastMessage.content}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

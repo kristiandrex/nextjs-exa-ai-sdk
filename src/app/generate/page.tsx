@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft } from "lucide-react";
 
@@ -9,27 +9,41 @@ import { SearchResult } from "@/lib/schemas";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArticleDraft } from "@/components/ArticleDraft";
-import { ChatProvider } from "@/contexts/ChatContext";
+import { useChatContext } from "@/contexts/ChatContext";
 
 export default function GeneratePage() {
-  const router = useRouter();
-  const [result, setResult] = useState<SearchResult | null>(null);
-  const [query, setQuery] = useState<string>("");
+  const [articleGeneration, setArticleGeneration] = useState<{
+    result: SearchResult | null;
+    query: string;
+  }>({
+    result: null,
+    query: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedResult = localStorage.getItem("selectedResult");
-    const storedQuery = localStorage.getItem("userQuery");
+  const router = useRouter();
+  const { messages } = useChatContext();
 
-    if (!storedResult || !storedQuery) {
+  const lastAssistantMessage = useMemo(
+    () => messages?.findLast((message) => message.role === "assistant"),
+    [messages]
+  );
+
+  useEffect(() => {
+    const storedArticle = localStorage.getItem("articleGeneration");
+
+    if (!storedArticle) {
       router.push("/");
       return;
     }
 
     try {
-      const parsedResult = JSON.parse(storedResult) as SearchResult;
-      setResult(parsedResult);
-      setQuery(storedQuery);
+      const parsedArticle = JSON.parse(storedArticle) as {
+        result: SearchResult;
+        query: string;
+      };
+
+      setArticleGeneration(parsedArticle);
     } catch (error) {
       console.error(error);
       router.push("/");
@@ -48,7 +62,7 @@ export default function GeneratePage() {
     );
   }
 
-  if (!result) {
+  if (!articleGeneration.result) {
     return null;
   }
 
@@ -64,26 +78,23 @@ export default function GeneratePage() {
           Volver a resultados
         </Button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <ChatProvider>
-            <Card>
-              <CardHeader>
-                <h1 className="text-2xl font-bold">{query}</h1>
-              </CardHeader>
-              <CardContent>
-                <ArticleGenerator result={result} />
-              </CardContent>
-            </Card>
+        <div
+          className={`grid gap-8 ${
+            lastAssistantMessage ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+          }`}
+        >
+          <Card>
+            <CardHeader>
+              <h1 className="text-2xl font-bold">{articleGeneration.query}</h1>
+            </CardHeader>
+            <CardContent>
+              <ArticleGenerator result={articleGeneration.result} />
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <h2 className="text-2xl font-bold">Borrador</h2>
-              </CardHeader>
-              <CardContent>
-                <ArticleDraft />
-              </CardContent>
-            </Card>
-          </ChatProvider>
+          {lastAssistantMessage && (
+            <ArticleDraft lastMessage={lastAssistantMessage} />
+          )}
         </div>
       </div>
     </main>

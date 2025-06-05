@@ -1,5 +1,5 @@
 import { SearchResult } from "@/lib/schemas";
 
 export type FormState =
-  | { results: SearchResult[]; error: null }
-  | { results: SearchResult[]; error: string };
+  | { results: SearchResult[]; error: null; query: string }
+  | { results: SearchResult[]; error: string; query: string };

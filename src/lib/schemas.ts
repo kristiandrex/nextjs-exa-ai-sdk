@@ -6,10 +6,8 @@ export const searchResultSchema = z.object({
   url: z.string(),
   publishedDate: z.string().optional(),
   author: z.string().optional(),
-  text: z.string(),
   summary: z.string(),
   image: z.string().optional(),
-  favicon: z.string().optional(),
   score: z.number().optional(),
 });
 

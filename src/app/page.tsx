@@ -20,6 +20,7 @@ import { search } from "./actions";
 const initialState: FormState = {
   results: [],
   error: null,
+  query: "",
 };
 
 export default function Home() {
@@ -69,7 +70,9 @@ export default function Home() {
 
         {state.results.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-2xl font-semibold mb-4">Resultados:</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Resultados para: {state.query}
+            </h2>
             <div className="grid gap-4">
               {state.results.map((result) => (
                 <SearchResultCard key={result.id} result={result} />

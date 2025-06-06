@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, TextCursor } from "lucide-react";
 
 import { ArticleGenerator } from "@/components/ArticleGenerator";
 import { SearchResult } from "@/lib/schemas";
@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArticleDraft } from "@/components/ArticleDraft";
 import { useChatContext } from "@/contexts/ChatContext";
+import { TitleGeneratorModal } from "@/components/TitleGeneratorModal";
 
 export default function GeneratePage() {
   const [articleGeneration, setArticleGeneration] = useState<{
@@ -20,6 +21,7 @@ export default function GeneratePage() {
     query: "",
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
 
   const router = useRouter();
   const { messages } = useChatContext();
@@ -51,6 +53,21 @@ export default function GeneratePage() {
       setIsLoading(false);
     }
   }, [router]);
+
+  function handleTitleSelect(newTitle: string) {
+    setArticleGeneration((prev) => ({
+      ...prev,
+      query: newTitle,
+    }));
+
+    localStorage.setItem(
+      "articleGeneration",
+      JSON.stringify({
+        ...articleGeneration,
+        query: newTitle,
+      })
+    );
+  }
 
   if (isLoading) {
     return (
@@ -85,7 +102,18 @@ export default function GeneratePage() {
         >
           <Card>
             <CardHeader>
-              <h1 className="text-2xl font-bold">{articleGeneration.query}</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold">
+                  {articleGeneration.query}
+                </h1>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsTitleModalOpen(true)}
+                >
+                  <TextCursor className="h-5 w-5" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <ArticleGenerator result={articleGeneration.result} />
@@ -97,6 +125,13 @@ export default function GeneratePage() {
           )}
         </div>
       </div>
+
+      <TitleGeneratorModal
+        isOpen={isTitleModalOpen}
+        onClose={() => setIsTitleModalOpen(false)}
+        onSelectTitle={handleTitleSelect}
+        currentQuery={articleGeneration.query}
+      />
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const searchResultSchema = z.object({
   id: z.string(),
@@ -12,8 +12,13 @@ export const searchResultSchema = z.object({
 });
 
 export const searchResultsSchema = z.array(searchResultSchema, {
-  error: "Los resultados deben ser una lista válida",
+  errorMap: () => ({ message: "Los resultados deben ser una lista válida" }),
+});
+
+export const titleSchema = z.object({
+  titles: z.array(z.string()),
 });
 
 export type SearchResult = z.infer<typeof searchResultSchema>;
 export type SearchResults = z.infer<typeof searchResultsSchema>;
+export type TitleSchema = z.infer<typeof titleSchema>;

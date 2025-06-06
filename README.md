@@ -1,12 +1,13 @@
 # Next.js Exa AI SDK
 
-Esta es una aplicación web construida con Next.js que integra el SDK de Exa AI para proporcionar capacidades de búsqueda y procesamiento de lenguaje natural.
+Esta es una aplicación web construida con Next.js que integra el SDK de Exa AI y Vercel AI SDK para proporcionar capacidades de búsqueda y procesamiento de lenguaje natural.
 
 ## Requisitos Previos
 
 - Node.js (versión 22 o superior)
 - pnpm (gestor de paquetes)
 - Una cuenta de Exa AI con credenciales de API válidas
+- Una cuenta de OpenAI con credenciales de API válidas
 
 ## Configuración del Proyecto
 
@@ -27,7 +28,13 @@ pnpm install
    Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
 ```env
+# Exa AI Configuration
 EXA_API_KEY=tu_api_key_aquí
+EXA_SUMMARY_PROMPT=tu_prompt_de_resumen_aquí
+
+# OpenAI Configuration
+OPENAI_API_KEY=tu_api_key_aquí
+CHAT_SYSTEM_PROMPT=tu_prompt_del_sistema_aquí
 ```
 
 ## Ejecución de la Aplicación
@@ -55,3 +62,9 @@ Para iniciar la versión de producción:
 ```bash
 pnpm start
 ```
+
+## Tecnologías Utilizadas
+
+- Next.js - Framework de React
+- Vercel AI SDK - SDK para integración de IA
+- Exa AI SDK - SDK para búsqueda y procesamiento de lenguaje natural
